@@ -1,0 +1,39 @@
+name: nodejs App Build
+on: 
+  push: 
+    branches: 
+     - master
+jobs:
+  lint-job1: 
+   runs-on: ubuntu-latest
+   steps: 
+     - name: Clone the repo
+       uses: actions/checkout@v4
+     - name: Install Dependencies
+       run: npm ci
+     - name: Review code
+       run : npm run lint
+  test-job2:
+    runs-on: ubuntu-latest
+    steps:
+     - name: Clone the repo
+       run: actions/checkout@v4
+     - name: Install Dependencies
+       run: npm ci
+     - name: test code
+       run: npm run test
+     - name: Upload test report on github
+       uses: actions/upload-artifact@v4
+       with:
+         name: test-report
+         path: test.json
+  build-job3:
+     runs-on: ubuntu-latest
+     needs: test-job2
+     steps:
+     - name: clone the repo
+       run: actions/checkout@v4
+     - name: install Dependencies
+       run: npm ci
+     - name: Build code
+       run: npm run build
